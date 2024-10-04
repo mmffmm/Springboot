@@ -18,7 +18,7 @@ public class WebSecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.authorizeHttpRequests((requests) -> requests
-				.requestMatchers("/", "/home").permitAll()
+				.requestMatchers("/", "/home", "/calculate", "/greet" ,"/greetings","/calculator").permitAll()
 				.anyRequest().authenticated()
 			)
 			.formLogin((form) -> form 
@@ -36,7 +36,7 @@ public class WebSecurityConfig {
 		UserDetails user =
 			 User.withDefaultPasswordEncoder()
 				.username("user")
-				.password("password")
+				.password("asd")
 				.roles("USER")
 				.build();
 
