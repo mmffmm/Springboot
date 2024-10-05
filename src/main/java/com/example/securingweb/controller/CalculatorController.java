@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
+import org.thymeleaf.expression.Lists;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +32,7 @@ public class CalculatorController {
             @RequestParam("num1") int num1,
             @RequestParam("num2") int num2,
             @RequestParam("operation") String operation,
-            Model model) {
+            Model model) throws JsonProcessingException {
 
 
         Map<String, Object> data = new HashMap<>();
@@ -46,20 +51,20 @@ public class CalculatorController {
         String apiUrl = "http://localhost:5000/calculator";
         ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestEntity, String.class);
 
-        // Get the result from the response
         String result = response.getBody();
-        System.out.println(result);
+        try{  
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(result);
+            int resultValue = jsonNode.get("result").asInt();
 
-        model.addAttribute("result", result); // Add the result to the model
+            model.addAttribute("result", resultValue); // Add the result to the model
+            
+            return "calculator"; // Return to the same Thymeleaf template
+        } catch (JsonProcessingException e) {
+            model.addAttribute("result", "error");
+            return "calculator"; 
+        }
 
-
-        //     // Hardcode the response to always be "3" for testing
-        // String result = "3"; // Hardcoded result
-
-        // Add the result to the model
-        // model.addAttribute("result", result);
-        
-        return "calculator"; // Return to the same Thymeleaf template
     }
 
 
