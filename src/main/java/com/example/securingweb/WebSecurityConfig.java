@@ -17,6 +17,7 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
+			.csrf((csrf) -> csrf.disable())
 			.authorizeHttpRequests((requests) -> requests
 				.requestMatchers("/", "/home", "/calculate", "/greet" ,"/greetings","/calculator").permitAll()
 				.anyRequest().authenticated()
@@ -35,7 +36,7 @@ public class WebSecurityConfig {
 	public UserDetailsService userDetailsService() {
 		UserDetails user =
 			 User.withDefaultPasswordEncoder()
-				.username("user")
+				.username("asd")
 				.password("asd")
 				.roles("USER")
 				.build();
